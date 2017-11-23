@@ -340,7 +340,6 @@ public class MVM {
                 case 30://"out ax"
                     System.out.println("Saida: AX=" + ax);
                     acessosMemoria++;
-                    System.out.println("batata");
                     tela.printConsoleOut(converterASCII(ax),bx,cx);
                     break;
 
@@ -604,6 +603,12 @@ public class MVM {
                     
                     break;        
 
+                case 57: //"setbit{}"
+                    tela.appendLog(ip+" - Executou setbit");
+                    
+                    acessosMemoria++;                    
+                    acessosMemoria++;
+                    break;
                     
                 default: {
                     repetir = false;
@@ -1069,10 +1074,20 @@ public class MVM {
                 mem[iMem++] = 56;    
             }else if(sConteudo.contains("setbit{")){
                 mem[iMem++] = 57;
-                iPosConteudo = 7;                
+                iPosConteudo = 7;  
+                String sAux = "";
+                while(sConteudo.charAt(iPosConteudo) != '}'){
+                    sAux += sConteudo.charAt(iPosConteudo++);
+                }
+                mem[iMem] = (short) (Short.parseShort(sAux) + shPosicao);
             }else if(sConteudo.contains("resetbit{")){
                 mem[iMem++] = 58;
                 iPosConteudo = 9;                
+                String sAux = "";
+                while(sConteudo.charAt(iPosConteudo) != '}'){
+                    sAux += sConteudo.charAt(iPosConteudo++);
+                }
+                mem[iMem] = (short) (Short.parseShort(sAux) + shPosicao);
             } else if (sConteudo.matches("[0-9]+")){
                 mem[iMem++] = Short.valueOf(sConteudo);      
             }
