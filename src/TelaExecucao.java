@@ -285,11 +285,17 @@ public class TelaExecucao extends javax.swing.JFrame {
 
     private void btnStepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStepActionPerformed
         short shPosicao = 0;
-        if(bPrimeiroStep){ //só chama o codificador na primeira chamada do botao, é zera o ip
+        
+        boolean executa = mvm.isSingleStepAtivada();
+        if (!executa)
+            executa = (JOptionPane.showConfirmDialog(this, "O single-step esta desativado, deseja ativa-lo?") == 0);
+        
+        if (executa && bPrimeiroStep){ //só chama o codificador na primeira chamada do botao, é zera o ip
             mvm.halt = false;
             btnRun.setEnabled(false); //nao da Run enquanto estiver no Step
             LimpaCampos();
             mvm.zeraRegs();
+            mvm.controlaBitsFlag(1, true); //ativo o single-step
             mvm.iPosicaoInstrucoes = 0; //para poder dar um run depois do step, para serem coisas separadas
             
             String sPosicao = JOptionPane.showInputDialog(this, "Digite o endereço de carga.", null);  
@@ -411,7 +417,8 @@ public class TelaExecucao extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRunActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        mvm.botao = 1;
+        if (mvm.isInterrupcaoAtivada())
+            mvm.botao = 1;
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private boolean VerificaEnderecoDeCarga(String sEntrada){

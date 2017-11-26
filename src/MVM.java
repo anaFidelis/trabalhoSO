@@ -21,7 +21,7 @@ public class MVM {
     static int iPosicaoInstrucoes = 0; //para pegar do arraylist a instruçao que esta sendo executada
     static int iValorInicialPilha = -1;
     public static boolean halt;
-    static byte flag = 00000000;
+    static byte flag = 00000001;
     
     /*
         Flags:
@@ -52,8 +52,34 @@ public class MVM {
     }
     
     public int getAcessosMemoria() {
-		return acessosMemoria;
-	}
+	return acessosMemoria;
+    }
+    
+    public static void controlaBitsFlag(int bit, boolean ativa){
+        switch (bit){
+            case 0: bit = 1; break;
+            case 1: bit = 2; break;
+            case 2: bit = 4; break;
+            case 3: bit = 8; break;
+            case 4: bit = 16; break;
+            case 5: bit = 32; break;
+            case 6: bit = 64; break;
+            case 7: bit = 128; break;
+        }
+        
+        if (ativa)
+            flag |= bit;
+        else
+            if ((flag & bit) == bit) flag -= bit; 
+    }
+    
+    public static boolean isInterrupcaoAtivada(){
+        return (flag & 1) == 1;
+    }
+    
+    public static boolean isSingleStepAtivada(){
+        return (flag & 2) == 2;
+    }
     
     public static void decodificador(short mem[], int programa, int aux, ArrayList<String> arrayInstrucoes) {
         boolean repetir = true;
@@ -606,9 +632,20 @@ public class MVM {
                 case 57: //"setbit{}"
                     tela.appendLog(ip+" - Executou setbit");
                     
+                    controlaBitsFlag(mem[ip + 1], true);
+                    
                     acessosMemoria++;                    
                     acessosMemoria++;
                     break;
+                    
+                case 58: //"resetbit{}"
+                    tela.appendLog(ip+" - Executou resetbit");
+                    
+                    controlaBitsFlag(mem[ip + 1], false);
+                    
+                    acessosMemoria++;                    
+                    acessosMemoria++;
+                    break;    
                     
                 default: {
                     repetir = false;
@@ -1072,14 +1109,6 @@ public class MVM {
                 mem[iMem++] = 55;
             }else if(sConteudo.contains("popf")){
                 mem[iMem++] = 56;    
-            }else if(sConteudo.contains("setbit{")){
-                mem[iMem++] = 57;
-                iPosConteudo = 7;  
-                String sAux = "";
-                while(sConteudo.charAt(iPosConteudo) != '}'){
-                    sAux += sConteudo.charAt(iPosConteudo++);
-                }
-                mem[iMem] = (short) (Short.parseShort(sAux) + shPosicao);
             }else if(sConteudo.contains("resetbit{")){
                 mem[iMem++] = 58;
                 iPosConteudo = 9;                
@@ -1087,8 +1116,16 @@ public class MVM {
                 while(sConteudo.charAt(iPosConteudo) != '}'){
                     sAux += sConteudo.charAt(iPosConteudo++);
                 }
-                mem[iMem] = (short) (Short.parseShort(sAux) + shPosicao);
-            } else if (sConteudo.matches("[0-9]+")){
+                mem[iMem] = (short) (Short.parseShort(sAux));            
+            }else if(sConteudo.contains("setbit{")){
+                mem[iMem++] = 57;
+                iPosConteudo = 7;  
+                String sAux = "";
+                while(sConteudo.charAt(iPosConteudo) != '}'){
+                    sAux += sConteudo.charAt(iPosConteudo++);
+                }
+                mem[iMem] = (short) (Short.parseShort(sAux));
+            }else if (sConteudo.matches("[0-9]+")){
                 mem[iMem++] = Short.valueOf(sConteudo);      
             }
             else{
