@@ -87,6 +87,8 @@ public class TelaExecucao extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         taConsoleOut = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        ckAtivaSingleStep = new javax.swing.JCheckBox();
+        ckAtivaInterrupcao = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -167,6 +169,20 @@ public class TelaExecucao extends javax.swing.JFrame {
             }
         });
 
+        ckAtivaSingleStep.setText("Ativa single-step");
+        ckAtivaSingleStep.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckAtivaSingleStepMouseClicked(evt);
+            }
+        });
+
+        ckAtivaInterrupcao.setText("Ativa interrupção");
+        ckAtivaInterrupcao.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckAtivaInterrupcaoMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -214,7 +230,12 @@ public class TelaExecucao extends javax.swing.JFrame {
                                                 .addComponent(edtIP)
                                                 .addComponent(edtBP))))
                                     .addComponent(jLabel7))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(ckAtivaSingleStep)
+                                .addGap(9, 9, 9)
+                                .addComponent(ckAtivaInterrupcao))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -234,7 +255,9 @@ public class TelaExecucao extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnStep)
                     .addComponent(btnRun)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(ckAtivaSingleStep)
+                    .addComponent(ckAtivaInterrupcao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -296,6 +319,7 @@ public class TelaExecucao extends javax.swing.JFrame {
             LimpaCampos();
             mvm.zeraRegs();
             mvm.controlaBitsFlag(1, true); //ativo o single-step
+            ckAtivaSingleStep.setSelected(true); //coloco o checkbox de ativaçao como checado
             mvm.iPosicaoInstrucoes = 0; //para poder dar um run depois do step, para serem coisas separadas
             
             String sPosicao = JOptionPane.showInputDialog(this, "Digite o endereço de carga.", null);  
@@ -421,6 +445,14 @@ public class TelaExecucao extends javax.swing.JFrame {
             mvm.botao = 1;
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void ckAtivaSingleStepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckAtivaSingleStepMouseClicked
+        mvm.controlaBitsFlag(1, ckAtivaSingleStep.isSelected());
+    }//GEN-LAST:event_ckAtivaSingleStepMouseClicked
+
+    private void ckAtivaInterrupcaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckAtivaInterrupcaoMouseClicked
+        mvm.controlaBitsFlag(0, ckAtivaInterrupcao.isSelected());
+    }//GEN-LAST:event_ckAtivaInterrupcaoMouseClicked
+
     private boolean VerificaEnderecoDeCarga(String sEntrada){
         if(sEntrada.length() > 4)
             return false;
@@ -544,6 +576,8 @@ public class TelaExecucao extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRun;
     private javax.swing.JButton btnStep;
+    private javax.swing.JCheckBox ckAtivaInterrupcao;
+    private javax.swing.JCheckBox ckAtivaSingleStep;
     private javax.swing.JTextField edtAX;
     private javax.swing.JTextField edtBP;
     private javax.swing.JTextField edtBX;
