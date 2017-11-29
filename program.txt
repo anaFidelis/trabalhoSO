@@ -1,0 +1,143 @@
+init ax
+
+move ax,{255}
+
+
+
+move sp, ax
+
+call 30
+
+
+
+out ax
+
+call 60
+
+
+
+out ax
+
+halt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+push ax
+
+move ax, {30}
+
+
+
+move [8], ax
+
+
+
+out ax
+
+pop ax
+
+ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+push ax
+
+move ax,[255]
+
+
+
+move bx, ax
+
+out ax
+
+pop ax
+
+ret
+
+
+
+
+
+
+
+
+
+
+
+

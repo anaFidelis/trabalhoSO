@@ -40,6 +40,7 @@ public class TelaExecucao extends javax.swing.JFrame {
         mvm = new MVM(this);
         mem = new short[1025];
         arrayInstrucoesExecucao = new ArrayList<String>();
+        ckAtivaInterrupcao.setSelected(mvm.isInterrupcaoAtivada());
         
         scrollPaneCodigo.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPaneCodigo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -441,7 +442,11 @@ public class TelaExecucao extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRunActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (mvm.isInterrupcaoAtivada())
+        boolean executa = mvm.isInterrupcaoAtivada();
+        if (!executa)
+            executa = (JOptionPane.showConfirmDialog(this, "A interrupção esta desativada, deseja ativa-la?") == 0);
+        
+        if (executa)
             mvm.botao = 1;
     }//GEN-LAST:event_jButton1ActionPerformed
 
