@@ -21,7 +21,7 @@ public class MVM {
     static int iPosicaoInstrucoes = 0; //para pegar do arraylist a instruçao que esta sendo executada
     static int iValorInicialPilha = -1;
     public static boolean halt;
-    static byte flag = 00000001;
+    static byte flag = 1;
     
     /*
         Flags:
@@ -100,7 +100,7 @@ public class MVM {
             	if (iPosicaoInstrucoes >= 0 && aux==0) {
             		tela.setEdtLinhaExecucao(arrayInstrucoes.get(iPosicaoInstrucoes++));
             	}            
-            if (botao == 1) {
+            if (botao == 1 && isInterrupcaoAtivada()) {
                     //"push ip" 
                     mem[sp] = (short) ip;
                     sp--;
@@ -535,6 +535,9 @@ public class MVM {
                     break;
 
                 case 51://"iret"
+                    //verifica se a flag de interrupçao esta ativada
+                    if (!isInterrupcaoAtivada()) break;
+                    
                     tela.appendLog(ip+" - Executou iret");
                     //"pop cx"
                     sp++;
@@ -564,6 +567,9 @@ public class MVM {
                     break;
 
                 case 52://"int"
+                    //verifica se a flag de interrupçao esta ativada
+                    if (!isInterrupcaoAtivada()) break;
+                    
                     tela.appendLog(ip+" - Executou int");
                     //"push ip" 
                     mem[sp] = (short) (ip + 2);
